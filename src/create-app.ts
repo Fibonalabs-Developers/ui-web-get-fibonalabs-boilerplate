@@ -6,6 +6,7 @@ import { shouldUseYarn } from "./utils/should-use-yarn";
 import clone from "./utils/clone";
 import { install } from "./utils/install";
 import { isWriteable } from "./utils/is-writeable";
+import run from "./utils/run";
 
 type TemplateType = {
   url: string;
@@ -77,6 +78,8 @@ export async function createApp({
   }
 
   process.chdir(root);
+
+  run("git", ["init", "-q"]);
 
   console.log();
   console.log("Installing packages. This might take a couple of minutes.");
