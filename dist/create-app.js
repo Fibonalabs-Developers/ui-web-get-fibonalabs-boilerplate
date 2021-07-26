@@ -59,6 +59,7 @@ var should_use_yarn_1 = require("./utils/should-use-yarn");
 var clone_1 = __importDefault(require("./utils/clone"));
 var install_1 = require("./utils/install");
 var is_writeable_1 = require("./utils/is-writeable");
+var run_1 = __importDefault(require("./utils/run"));
 function createApp(_a) {
     var appPath = _a.appPath, useNpm = _a.useNpm, template = _a.template;
     return __awaiter(this, void 0, void 0, function () {
@@ -111,6 +112,7 @@ function createApp(_a) {
                         process.exit(1);
                     }
                     process.chdir(root);
+                    run_1.default("git", ["init", "-q"]);
                     console.log();
                     console.log("Installing packages. This might take a couple of minutes.");
                     console.log();
