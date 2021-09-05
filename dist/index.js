@@ -112,6 +112,11 @@ function run() {
                                         description: "Material UI",
                                         value: "materialui",
                                     },
+                                    {
+                                        title: "TailwindCSS",
+                                        description: "Base Default Template",
+                                        value: "tailwindcss",
+                                    },
                                 ],
                                 initial: 0,
                             },

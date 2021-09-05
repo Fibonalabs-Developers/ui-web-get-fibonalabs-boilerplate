@@ -53,6 +53,11 @@ async function run(): Promise<void> {
             description: "Material UI",
             value: "materialui",
           },
+          {
+            title: "TailwindCSS",
+            description: "Base Default Template",
+            value: "tailwindcss",
+          },
         ],
         initial: 0,
       },
