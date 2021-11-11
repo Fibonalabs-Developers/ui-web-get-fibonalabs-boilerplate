@@ -4,6 +4,18 @@
 Boilerplate is the library with set of pre-defined codes for Generating frontend templates
 
 
+#Getting Started:
+
+## AWS Login
+
+Use the following command in the terminal:
+
+
+```bash
+aws codeartifact login --tool npm --repository fibonalabs --domain dev-fibonalabs --domain-owner 650571980132
+```
+
+
 ## Installation
 
 
@@ -16,14 +28,16 @@ npx @fibonalabs/create-fibonalabs-ui
 
 
 
-## Creating an App
+## Steps to Creating an App:
 
 
 Once you've given the npx command it prompts for asking ,
 
 Project Name- Mention the name of your project.
 
-UI Kit- Choose the type of UI kit of your choice among ANT Design,Material UI and Tailswind CSS.
+Choose the framework- NExtJS, CRA
+
+Choose the type of UI Kit- ANT Design, Material UI and Tailswind CSS.
 
 Once all these steps are done, and you’re good to go.
 
@@ -32,7 +46,7 @@ Once all these steps are done, and you’re good to go.
 ## Output
 
 
-It will create a directory called project-name inside the current folder.
+It will create a directory with the project-name inside the current folder.
 
 Inside that directory, it will generate the initial project structure and install the transitive dependencies.
 
