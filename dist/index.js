@@ -59,13 +59,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var prompts_1 = __importDefault(require("prompts"));
 var chalk_1 = __importDefault(require("chalk"));
 var path_1 = __importDefault(require("path"));
+var prompts_1 = __importDefault(require("prompts"));
 var message_1 = __importDefault(require("./utils/message"));
 var validate_pkg_1 = require("./utils/validate-pkg");
 var create_app_1 = require("./create-app");
 var template_config_1 = __importStar(require("./utils/template-config"));
+var yargs = require('yargs/yargs');
+var hideBin = require('yargs/helpers').hideBin;
+var argv = yargs(hideBin(process.argv)).argv;
 // import packageJson from "./package.json";
 // const program = new Commander.Command(packageJson.name);
 var program = {
@@ -73,64 +76,95 @@ var program = {
 };
 var projectPath = "";
 var uikit = "";
+var name = "";
+var framework = "";
+var promptArr = [];
 function run() {
     return __awaiter(this, void 0, void 0, function () {
         var res, resolvedProjectPath, projectName, _a, valid, problems, templateName, template, error_1;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
+                    if (!("projectname" in argv)) {
+                        promptArr.push({
+                            type: "text",
+                            name: "projectName",
+                            message: message_1.default.projectNameQuestion,
+                            initial: message_1.default.projectNameDefaultValue,
+                            validate: function (name) {
+                                var validation = validate_pkg_1.validateNpmName(path_1.default.basename(path_1.default.resolve(name)));
+                                if (validation.valid) {
+                                    return true;
+                                }
+                                return "Invalid project name: " + validation.problems[0];
+                            },
+                        });
+                    }
+                    if (!("framework" in argv)) {
+                        promptArr.push({
+                            type: "select",
+                            name: "framework",
+                            message: "Which Framework would you like to use?",
+                            choices: [
+                                {
+                                    title: "Nextjs",
+                                    description: "Nextjs",
+                                    value: "nextjs",
+                                },
+                                {
+                                    title: "CRA",
+                                    description: "CRA",
+                                    value: "cra",
+                                },
+                            ],
+                            initial: 0,
+                        });
+                    }
+                    if (!("uikit" in argv)) {
+                        promptArr.push({
+                            type: "select",
+                            name: "uikit",
+                            message: "Which UI Kit would you like to use?",
+                            choices: [
+                                {
+                                    title: "Ant Design",
+                                    description: "Ant Design",
+                                    value: "antdesign",
+                                },
+                                {
+                                    title: "Material UI",
+                                    description: "Material UI",
+                                    value: "materialui",
+                                },
+                                {
+                                    title: "TailwindCSS",
+                                    description: "Base Default Template",
+                                    value: "tailwindcss",
+                                },
+                            ],
+                            initial: 0,
+                        });
+                    }
+                    return [4 /*yield*/, prompts_1.default(promptArr)];
+                case 1:
+                    res = _b.sent();
+                    name = "projectname" in res ? res.projectName : argv.projectname;
+                    uikit = "uikit" in res ? res.uikit : argv.uikit;
+                    framework = "framework" in res ? res.framework : argv.framework;
                     if (typeof projectPath === "string") {
                         projectPath = projectPath.trim();
                     }
-                    if (!!projectPath) return [3 /*break*/, 2];
-                    return [4 /*yield*/, prompts_1.default([
-                            {
-                                type: "text",
-                                name: "projectName",
-                                message: message_1.default.projectNameQuestion,
-                                initial: message_1.default.projectNameDefaultValue,
-                                validate: function (name) {
-                                    var validation = validate_pkg_1.validateNpmName(path_1.default.basename(path_1.default.resolve(name)));
-                                    if (validation.valid) {
-                                        return true;
-                                    }
-                                    return "Invalid project name: " + validation.problems[0];
-                                },
-                            },
-                            {
-                                type: "select",
-                                name: "uikit",
-                                message: "Which UI Kit would you like to use?",
-                                choices: [
-                                    {
-                                        title: "Ant Design",
-                                        description: "Ant Design",
-                                        value: "antdesign",
-                                    },
-                                    {
-                                        title: "Material UI",
-                                        description: "Material UI",
-                                        value: "materialui",
-                                    },
-                                    {
-                                        title: "TailwindCSS",
-                                        description: "Base Default Template",
-                                        value: "tailwindcss",
-                                    },
-                                ],
-                                initial: 0,
-                            },
-                        ])];
-                case 1:
-                    res = _b.sent();
-                    if (typeof res.projectName === "string") {
-                        projectPath = res.projectName.trim();
+                    if (!projectPath) {
+                        if (typeof name === "string") {
+                            projectPath = name.trim();
+                        }
+                        if (typeof uikit === "string") {
+                            uikit = uikit.trim();
+                        }
+                        if (typeof framework === "string") {
+                            framework = framework.trim();
+                        }
                     }
-                    if (typeof res.uikit === "string") {
-                        uikit = res.uikit.trim();
-                    }
-                    _b.label = 2;
-                case 2:
                     if (!projectPath) {
                         console.log();
                         console.log("Please specify the project directory:");
@@ -149,24 +183,24 @@ function run() {
                         problems.forEach(function (p) { return console.error("    " + chalk_1.default.red.bold("*") + " " + p); });
                         process.exit(1);
                     }
-                    _b.label = 3;
-                case 3:
-                    _b.trys.push([3, 5, , 6]);
-                    templateName = template_config_1.getTemplateName("nextjs", uikit);
+                    _b.label = 2;
+                case 2:
+                    _b.trys.push([2, 4, , 5]);
+                    templateName = template_config_1.getTemplateName(framework, uikit);
                     template = template_config_1.default(templateName);
                     return [4 /*yield*/, create_app_1.createApp({
                             appPath: resolvedProjectPath,
                             useNpm: true,
                             template: template,
                         })];
-                case 4:
+                case 3:
                     _b.sent();
-                    return [3 /*break*/, 6];
-                case 5:
+                    return [3 /*break*/, 5];
+                case 4:
                     error_1 = _b.sent();
                     console.log(chalk_1.default.red(error_1.toString()));
-                    return [3 /*break*/, 6];
-                case 6: return [2 /*return*/];
+                    return [3 /*break*/, 5];
+                case 5: return [2 /*return*/];
             }
         });
     });

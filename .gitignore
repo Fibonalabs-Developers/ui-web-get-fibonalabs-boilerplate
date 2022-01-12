@@ -119,3 +119,6 @@ out
 
 # setup scripts
 .setup.txt
+
+# dist
+dist/
